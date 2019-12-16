@@ -1,0 +1,16 @@
+
+html, body {
+    height: 100%;
+}
+
+.side {
+    float: left;
+    width: 25%;
+    height: 100%;
+}
+
+.map {
+    float: right;
+    height: 100%;
+    width: 75%;
+}

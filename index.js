@@ -1,5 +1,7 @@
 const { app, Menu, MenuItem, BrowserWindow } = require('electron')
 
+const sp = require('./serialport.js')
+
 const isMac = process.platform === 'darwin'
 
 const template = [

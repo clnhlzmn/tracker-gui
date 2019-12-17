@@ -11,6 +11,7 @@
   "license": "MIT",
   "devDependencies": {
     "electron": "^7.1.5",
-    "electron-packager": "^14.1.1"
+    "electron-packager": "^14.1.1",
+    "serialport": "^8.0.5"
   }
 }

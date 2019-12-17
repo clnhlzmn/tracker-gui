@@ -68,6 +68,8 @@ function createWindow () {
         // when you should delete the corresponding element.
         win = null
     })
+
+    setTimeout(function () {win.webContents.send('update', {msg: 'hi'})}, 5000);
 }
 
 // This method will be called when Electron has finished
@@ -91,7 +93,6 @@ app.on('activate', () => {
         createWindow()
     }
 })
-
 
 
 // In this file you can include the rest of your app's specific main process

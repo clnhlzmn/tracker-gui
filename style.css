@@ -94,6 +94,7 @@ ul li.checked::before {
     padding: 30px 40px;
     color: white;
     text-align: center;
+    font-size: 16px;
 }
 
 /* Clear floats after the header */
@@ -129,5 +130,23 @@ input {
 }
 
 .addBtn:hover {
+    background-color: #bbb;
+}
+
+.reload {
+    font-family: Lucida Sans Unicode;
+    padding: 10px;
+    width: 25%;
+    background: #d9d9d9;
+    color: #555;
+    float: right;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+    border-radius: 0;
+}
+
+.reload:hover {
     background-color: #bbb;
 }

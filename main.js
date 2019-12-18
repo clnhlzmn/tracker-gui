@@ -27,17 +27,7 @@ const template = [
       { label: 'Save As' },
       isMac ? { role: 'close' } : { role: 'quit' },
     ]
-  },
-  {
-    label: 'Base Station',
-    submenu: [
-        {
-            id: 'ports',
-            label: 'Port',
-            submenu: []
-        }
-    ]
-  },
+  }
 ]
 
 const menu = Menu.buildFromTemplate(template)

@@ -8,7 +8,10 @@
     </head>
     <body>
         <div id="side" class="side">
-            <div class="header">Ports</div>
+            <div class="header">
+            <span>Ports</span>
+            <span class="reload" onClick="reloadPorts()">&#x21bb;</span>
+            </div>
             <ul id="portsList">
                 <li>COM0</li>
                 <li>COM1</li>
@@ -28,8 +31,7 @@
             </ul>
         </div>
         <div id="map" class="map"></div>
-        <script src="map.js"></script>
-        <script src="list.js"></script>
+        <script src="renderer.js"></script>
         <script> 
             const {ipcRenderer} = require('electron')
             ipcRenderer.on('update', function(event, arg) {

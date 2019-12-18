@@ -1,15 +1,17 @@
 
-//create icons
-var iconFeatures=[];
+const serialport = require('serialport')
 
-var iconFeature = new ol.Feature({
+//create icons
+let iconFeatures=[];
+
+let iconFeature = new ol.Feature({
     geometry: new ol.geom.Point(ol.proj.transform([-83.050892, 42.532880], 'EPSG:4326', 'EPSG:3857')),
     name: 'Null Island',
     population: 4000,
     rainfall: 500
 });
 
-var iconFeature1 = new ol.Feature({
+let iconFeature1 = new ol.Feature({
     geometry: new ol.geom.Point(ol.proj.transform([-83.070892, 42.532880], 'EPSG:4326', 'EPSG:3857')),
     name: 'Null Island Two',
     population: 4001,
@@ -19,11 +21,11 @@ var iconFeature1 = new ol.Feature({
 iconFeatures.push(iconFeature);
 iconFeatures.push(iconFeature1);
 
-var vectorSource = new ol.source.Vector({
+let vectorSource = new ol.source.Vector({
     features: iconFeatures //add an array of features
 });
 
-var iconStyle = new ol.style.Style({
+let iconStyle = new ol.style.Style({
     image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
         anchor: [0.5, 0.5],
         anchorXUnits: 'fraction',
@@ -34,12 +36,12 @@ var iconStyle = new ol.style.Style({
 });
 
 
-var vectorLayer = new ol.layer.Vector({
+let vectorLayer = new ol.layer.Vector({
     source: vectorSource,
     style: iconStyle
 });
 
-var map = new ol.Map({
+let map = new ol.Map({
     target: 'map',
     layers: [
         new ol.layer.Tile({
@@ -54,28 +56,26 @@ var map = new ol.Map({
 });
 
 // Create a "close" button and append it to each list item
-var myNodelist = document.getElementsByTagName("LI");
-var i;
-for (i = 0; i < myNodelist.length; i++) {
-    var span = document.createElement("SPAN");
-    var txt = document.createTextNode("\u00D7");
+let myNodelist = document.getElementsByTagName("LI");
+for (let i = 0; i < myNodelist.length; i++) {
+    let span = document.createElement("SPAN");
+    let txt = document.createTextNode("\u00D7");
     span.className = "close";
     span.appendChild(txt);
     myNodelist[i].appendChild(span);
 }
 
 // Click on a close button to hide the current list item
-var close = document.getElementsByClassName("close");
-var i;
-for (i = 0; i < close.length; i++) {
+let close = document.getElementsByClassName("close");
+for (let i = 0; i < close.length; i++) {
     close[i].onclick = function() {
-        var div = this.parentElement;
+        let div = this.parentElement;
         div.style.display = "none";
     }
 }
 
 // Add a "checked" symbol when clicking on a list item
-var lists = [document.getElementById('portsList'), document.getElementById('dataList')];
+let lists = [document.getElementById('portsList'), document.getElementById('dataList')];
 lists.forEach( list => {
     list.addEventListener('click', function(ev) {
         if (ev.target.tagName === 'LI') {
@@ -86,9 +86,9 @@ lists.forEach( list => {
 
 // Create a new list item when clicking on the "Add" button
 function newElement() {
-    var li = document.createElement("li");
-    var inputValue = document.getElementById("myInput").value;
-    var t = document.createTextNode(inputValue);
+    let li = document.createElement("li");
+    let inputValue = document.getElementById("myInput").value;
+    let t = document.createTextNode(inputValue);
     li.appendChild(t);
     if (inputValue === '') {
         alert("You must write something!");
@@ -97,16 +97,30 @@ function newElement() {
     }
     document.getElementById("myInput").value = "";
 
-    var span = document.createElement("SPAN");
-    var txt = document.createTextNode("\u00D7");
+    let span = document.createElement("SPAN");
+    let txt = document.createTextNode("\u00D7");
     span.className = "close";
     span.appendChild(txt);
     li.appendChild(span);
 
     for (i = 0; i < close.length; i++) {
         close[i].onclick = function() {
-            var div = this.parentElement;
+            let div = this.parentElement;
             div.style.display = "none";
         }
     }
-} 
+}
+
+function refreshPorts() {
+    const portsList = document.getElementById('portsList')
+    while(portsList.firstChild){
+        portsList.removeChild(portsList.firstChild);
+    }
+    serialport.list().then(ports => {
+        ports.forEach(port => {
+            var li = document.createElement("LI");
+            li.innerHTML = port.path;
+            portsList.append(li)
+        })
+    })
+}

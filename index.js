@@ -71,7 +71,9 @@ function createWindow () {
         win = null
     })
 
-    setTimeout(function () {win.webContents.send('update', {msg: 'hi'})}, 5000);
+    sp.addRXListener(line => 
+        win.webContents.send('update', {msg: line})
+    )
 }
 
 // This method will be called when Electron has finished

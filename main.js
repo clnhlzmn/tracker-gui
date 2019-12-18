@@ -63,7 +63,13 @@ function createWindow () {
     
     ipcMain.on('list-ports', (event) => {
         console.log('list-ports')
-        event.returnValue = SerialPort.list();
+        SerialPort.list().then(list => {
+            const ports = []
+            list.forEach(port => {
+                ports.push(port)
+            })
+            event.reply('list-ports', ports);
+        })
     })
 }
 

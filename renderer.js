@@ -117,17 +117,17 @@ function newElement() {
 }
 
 function refreshPorts() {
+    ipcRenderer.send('list-ports')
+}
+
+ipcRenderer.on('list-ports', (event, list) => {
     const portsList = document.getElementById('portsList')
     while(portsList.firstChild){
         portsList.removeChild(portsList.firstChild);
     }
-    const ports = ipcRenderer.sendSync('list-ports')
-    console.log(ports)
-    ports.then( ports => {
-        ports.forEach(port => {
-            var li = document.createElement("LI");
-            li.innerHTML = port.path;
-            portsList.append(li)
-        })
+    list.forEach(port => {
+        var li = document.createElement("LI");
+        li.innerHTML = port.path;
+        portsList.append(li)
     })
-}
+})

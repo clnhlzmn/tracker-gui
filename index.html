@@ -4,24 +4,28 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.1.1/css/ol.css" type="text/css">
         <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.1.1/build/ol.js"></script>
         <link rel = "stylesheet" type = "text/css" href = "style.css">
-        <link rel = "stylesheet" type = "text/css" href = "list-style.css">
         <title>tracker-gui</title>
     </head>
     <body>
         <div id="side" class="side">
-            <div id="myDIV" class="header">
-                <h2>My To Do List</h2>
-                <input type="text" id="myInput" placeholder="Title...">
-                <span onclick="newElement()" class="addBtn">Add</span>
-            </div>
-            <ul id="myUL">
+            <div class="header">Ports</div>
+            <ul id="portsList">
+                <li>COM0</li>
+                <li>COM1</li>
+            </ul>
+            <div id="myDIV" class="header">Data</div>
+            <ul id="dataList">
                 <li>Hit the gym</li>
                 <li class="checked">Pay bills</li>
                 <li>Meet George</li>
                 <li>Buy eggs</li>
                 <li>Read a book</li>
                 <li>Organize office</li>
-            </ul> 
+                <li>Organize office</li>
+                <li>Organize office</li>
+                <li>Organize office</li>
+                <li>Organize office</li>
+            </ul>
         </div>
         <div id="map" class="map"></div>
         <script src="map.js"></script>

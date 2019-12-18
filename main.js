@@ -1,6 +1,6 @@
-const { app, Menu, MenuItem, BrowserWindow } = require('electron')
-
-const sp = require('./serialport.js')
+const { app, Menu, MenuItem, BrowserWindow, ipcMain } = require('electron')
+const SerialPort = require('serialport')
+const Readline = require('@serialport/parser-readline')
 
 const isMac = process.platform === 'darwin'
 
@@ -60,10 +60,11 @@ function createWindow () {
         // when you should delete the corresponding element.
         win = null
     })
-
-    sp.addRXListener(line => 
-        win.webContents.send('update', {msg: line})
-    )
+    
+    ipcMain.on('list-ports', (event) => {
+        console.log('list-ports')
+        event.returnValue = SerialPort.list();
+    })
 }
 
 // This method will be called when Electron has finished

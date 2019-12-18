@@ -1,5 +1,10 @@
 
-const serialport = require('serialport')
+//const serialport = require('serialport')
+const {ipcRenderer} = require('electron')
+
+//ipcRenderer.on('update', function(event, arg) {
+    //console.log(arg.msg);
+//});
 
 //create icons
 let iconFeatures=[];
@@ -116,7 +121,9 @@ function refreshPorts() {
     while(portsList.firstChild){
         portsList.removeChild(portsList.firstChild);
     }
-    serialport.list().then(ports => {
+    const ports = ipcRenderer.sendSync('list-ports')
+    console.log(ports)
+    ports.then( ports => {
         ports.forEach(port => {
             var li = document.createElement("LI");
             li.innerHTML = port.path;

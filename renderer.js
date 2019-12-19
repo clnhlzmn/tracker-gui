@@ -2,23 +2,6 @@
 //const serialport = require('serialport')
 const {ipcRenderer} = require('electron')
 
-//create icons
-let iconFeatures=[];
-
-let iconFeature = new ol.Feature({
-    geometry: new ol.geom.Point(ol.proj.transform([-83.050892, 42.532880], 'EPSG:4326', 'EPSG:3857')),
-    name: 'Null Island',
-    population: 4000,
-    rainfall: 500
-});
-
-let iconFeature1 = new ol.Feature({
-    geometry: new ol.geom.Point(ol.proj.transform([-83.070892, 42.532880], 'EPSG:4326', 'EPSG:3857')),
-    name: 'Null Island Two',
-    population: 4001,
-    rainfall: 501
-});
-
 let vectorSource = new ol.source.Vector();
 
 let iconStyle = new ol.style.Style({
@@ -31,7 +14,6 @@ let iconStyle = new ol.style.Style({
     }))
 });
 
-
 let vectorLayer = new ol.layer.Vector({
     source: vectorSource,
     style: iconStyle
@@ -41,7 +23,13 @@ let map = new ol.Map({
     target: 'map',
     layers: [
         new ol.layer.Tile({
-    source: new ol.source.OSM()
+            source: new ol.source.XYZ({
+                attributions: ['Powered by Esri',
+                               'Source: Esri, DigitalGlobe, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community'],
+                attributionsCollapsible: false,
+                url: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+                maxZoom: 23
+              })
         }),
         vectorLayer
     ],
@@ -80,6 +68,7 @@ document.getElementById('dataList').addEventListener('click', function(ev) {
 // Create a new list item when clicking on the "Add" button
 function newDataElement(text) {
     let li = document.createElement("li");
+    li.classList.add('trackerLI')
     let t = document.createTextNode(text);
     li.appendChild(t);
     
@@ -118,6 +107,7 @@ ipcRenderer.on('list-ports', (event, list) => {
     }
     list.forEach(port => {
         var li = document.createElement("LI");
+        li.classList.add('trackerLI')
         li.innerHTML = port.path;
         li.addEventListener('click', function() {
             ipcRenderer.send('port-selected', port)

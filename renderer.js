@@ -2,10 +2,6 @@
 //const serialport = require('serialport')
 const {ipcRenderer} = require('electron')
 
-//ipcRenderer.on('update', function(event, arg) {
-    //console.log(arg.msg);
-//});
-
 //create icons
 let iconFeatures=[];
 
@@ -80,15 +76,12 @@ for (let i = 0; i < close.length; i++) {
 }
 
 // Add a "checked" symbol when clicking on a list item
-let lists = [document.getElementById('portsList'), document.getElementById('dataList')];
-lists.forEach( list => {
-    list.addEventListener('click', function(ev) {
-        if (ev.target.tagName === 'LI') {
-            ev.target.classList.toggle('checked');
-        }
-    }, false);
-})
-
+document.getElementById('dataList').addEventListener('click', function(ev) {
+    if (ev.target.tagName === 'LI') {
+        ev.target.classList.toggle('checked');
+    }
+}, false);
+    
 // Create a new list item when clicking on the "Add" button
 function newElement() {
     let li = document.createElement("li");
@@ -120,6 +113,15 @@ function refreshPorts() {
     ipcRenderer.send('list-ports')
 }
 
+function setChecked(li) {
+    const portsList = document.getElementById('portsList').children
+    for (let i = 0; i < portsList.length; ++i) {
+        console.log(portsList[i])
+        portsList[i].classList.remove('checked')
+    }
+    li.classList.add('checked')
+}
+
 ipcRenderer.on('list-ports', (event, list) => {
     const portsList = document.getElementById('portsList')
     while(portsList.firstChild){
@@ -128,6 +130,14 @@ ipcRenderer.on('list-ports', (event, list) => {
     list.forEach(port => {
         var li = document.createElement("LI");
         li.innerHTML = port.path;
+        li.addEventListener('click', function() {
+            ipcRenderer.send('port-selected', port)
+            setChecked(li)
+        })
         portsList.append(li)
     })
 })
+
+ipcRenderer.on('new-data', function(event, data) {
+    console.log(data);
+});

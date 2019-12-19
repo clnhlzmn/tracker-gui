@@ -61,14 +61,27 @@ function createWindow () {
         win = null
     })
     
-    ipcMain.on('list-ports', (event) => 
+    let serialport = undefined
+    
+    ipcMain.on('list-ports', (event) => {
         SerialPort.list().then(list => {
             const ports = []
-            list.forEach(port => {
-                ports.push(port)
+            list.forEach(portInfo => {
+                ports.push(portInfo)
             })
             event.reply('list-ports', ports);
         })
+    })
+    
+    ipcMain.on('port-selected', (ev, portInfo) => {
+        if (serialport !== undefined)
+            serialport.close()
+        serialport = new SerialPort(portInfo.path)
+        const parser = new Readline()
+        serialport.pipe(parser)
+        parser.on('data', line =>
+            win.webContents.send('new-data', line)
+        )
     })
 }
 

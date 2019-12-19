@@ -126,11 +126,13 @@ ipcRenderer.on('list-ports', (event, list) => {
 function addDataPoint(dataStr) {
     const fields = dataStr.split(',')
     console.log(fields)
-    vectorSource.addFeature(new ol.Feature({
-        geometry: new ol.geom.Point(ol.proj.transform([fields[3], fields[2]], 'EPSG:4326', 'EPSG:3857')),
-    }))
-    vectorSource.changed()
-    newDataElement(dataStr)
+    if (fields.length == 5) {
+        vectorSource.addFeature(new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.transform([fields[3], fields[2]], 'EPSG:4326', 'EPSG:3857')),
+        }))
+        vectorSource.changed()
+        newDataElement(dataStr)
+    }
 }
 
 ipcRenderer.on('new-data', function(event, data) {

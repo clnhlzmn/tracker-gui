@@ -19,12 +19,7 @@ let iconFeature1 = new ol.Feature({
     rainfall: 501
 });
 
-iconFeatures.push(iconFeature);
-iconFeatures.push(iconFeature1);
-
-let vectorSource = new ol.source.Vector({
-    features: iconFeatures //add an array of features
-});
+let vectorSource = new ol.source.Vector();
 
 let iconStyle = new ol.style.Style({
     image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
@@ -83,30 +78,25 @@ document.getElementById('dataList').addEventListener('click', function(ev) {
 }, false);
     
 // Create a new list item when clicking on the "Add" button
-function newElement() {
+function newDataElement(text) {
     let li = document.createElement("li");
-    let inputValue = document.getElementById("myInput").value;
-    let t = document.createTextNode(inputValue);
+    let t = document.createTextNode(text);
     li.appendChild(t);
-    if (inputValue === '') {
-        alert("You must write something!");
-    } else {
-        document.getElementById("myUL").appendChild(li);
-    }
-    document.getElementById("myInput").value = "";
+    
+    document.getElementById('dataList').appendChild(li)
 
-    let span = document.createElement("SPAN");
-    let txt = document.createTextNode("\u00D7");
-    span.className = "close";
-    span.appendChild(txt);
-    li.appendChild(span);
-
-    for (i = 0; i < close.length; i++) {
-        close[i].onclick = function() {
-            let div = this.parentElement;
-            div.style.display = "none";
-        }
-    }
+    //let span = document.createElement("SPAN");
+    //let txt = document.createTextNode("\u00D7");
+    //span.className = "close";
+    //span.appendChild(txt);
+    //li.appendChild(span);
+//
+    //for (i = 0; i < close.length; i++) {
+        //close[i].onclick = function() {
+            //let div = this.parentElement;
+            //div.style.display = "none";
+        //}
+    //}
 }
 
 function refreshPorts() {
@@ -116,7 +106,6 @@ function refreshPorts() {
 function setChecked(li) {
     const portsList = document.getElementById('portsList').children
     for (let i = 0; i < portsList.length; ++i) {
-        console.log(portsList[i])
         portsList[i].classList.remove('checked')
     }
     li.classList.add('checked')
@@ -138,6 +127,16 @@ ipcRenderer.on('list-ports', (event, list) => {
     })
 })
 
+function addDataPoint(dataStr) {
+    const fields = dataStr.split(',')
+    console.log(fields)
+    vectorSource.addFeature(new ol.Feature({
+        geometry: new ol.geom.Point(ol.proj.transform([fields[3], fields[2]], 'EPSG:4326', 'EPSG:3857')),
+    }))
+    vectorSource.changed()
+    newDataElement(dataStr)
+}
+
 ipcRenderer.on('new-data', function(event, data) {
-    console.log(data);
+    addDataPoint(data)
 });

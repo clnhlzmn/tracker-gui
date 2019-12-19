@@ -102,13 +102,19 @@ function setChecked(li) {
 
 ipcRenderer.on('list-ports', (event, list) => {
     const portsList = document.getElementById('portsList')
+    let checkedPort = undefined
     while(portsList.firstChild){
+        if (portsList.firstChild.nodeName == "LI" && portsList.firstChild.classList.contains('checked'))
+            checkedPort = portsList.firstChild
         portsList.removeChild(portsList.firstChild);
     }
+    console.log('checked port ' + checkedPort)
     list.forEach(port => {
         var li = document.createElement("LI");
         li.classList.add('trackerLI')
         li.innerHTML = port.path;
+        if (checkedPort !== undefined && checkedPort.innerHTML == port.path)
+            li.classList.add('checked')
         li.addEventListener('click', function() {
             ipcRenderer.send('port-selected', port)
             setChecked(li)

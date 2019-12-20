@@ -4,11 +4,12 @@ const {ipcRenderer} = require('electron')
 
 const fs = require("fs");
 
-let vectorSource = new ol.source.Vector();
+const vectorSource = new ol.source.Vector();
 
-let vectorLayer = new ol.layer.Vector({
-    source: vectorSource
-});
+const mapView = new ol.View({
+    center: ol.proj.fromLonLat([-83.050892, 42.532880]),
+    zoom: 16
+})
 
 let map = new ol.Map({
     target: 'map',
@@ -19,12 +20,11 @@ let map = new ol.Map({
                 imagerySet: 'AerialWithLabelsOnDemand',
               })
         }),
-        vectorLayer
+        new ol.layer.Vector({
+            source: vectorSource
+        })
     ],
-    view: new ol.View({
-        center: ol.proj.fromLonLat([-83.050892, 42.532880]),
-        zoom: 16
-    })
+    view: mapView
 });
 
 // Create a "close" button and append it to each list item

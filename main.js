@@ -82,6 +82,7 @@ function createWindow () {
         parser.on('data', line =>
             win.webContents.send('new-data', line)
         )
+        win.webContents.send('new-data', '20191219,080000000,42.650336,-83.167828,1.5')
     })
 }
 

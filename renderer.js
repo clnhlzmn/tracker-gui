@@ -6,19 +6,8 @@ const fs = require("fs");
 
 let vectorSource = new ol.source.Vector();
 
-let iconStyle = new ol.style.Style({
-    image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
-        anchor: [0.5, 0.5],
-        anchorXUnits: 'fraction',
-        anchorYUnits: 'fraction',
-        opacity: 1,
-        src: 'dot-large.png'
-    }))
-});
-
 let vectorLayer = new ol.layer.Vector({
-    source: vectorSource,
-    style: iconStyle
+    source: vectorSource
 });
 
 let map = new ol.Map({
@@ -28,7 +17,6 @@ let map = new ol.Map({
             source: new ol.source.BingMaps({
                 key: fs.readFileSync('bingmaps.key'),
                 imagerySet: 'AerialWithLabelsOnDemand',
-                maxZoom: 19
               })
         }),
         vectorLayer

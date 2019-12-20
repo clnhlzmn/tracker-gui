@@ -82,7 +82,8 @@ function createWindow () {
         parser.on('data', line =>
             win.webContents.send('new-data', line)
         )
-        win.webContents.send('new-data', '20191219,080000000,42.650336,-83.167828,1.5')
+        if (process.env.TRACKER_ENV === 'dev') //send fake location when serial port is checked in 'dev' environment
+            win.webContents.send('new-data', '20191219,080000000,42.650336,-83.167828,1.5')
     })
 }
 

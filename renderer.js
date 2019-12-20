@@ -26,32 +26,6 @@ let map = new ol.Map({
     ],
     view: mapView
 });
-
-// Create a "close" button and append it to each list item
-let myNodelist = document.getElementsByTagName("LI");
-for (let i = 0; i < myNodelist.length; i++) {
-    let span = document.createElement("SPAN");
-    let txt = document.createTextNode("\u00D7");
-    span.className = "close";
-    span.appendChild(txt);
-    myNodelist[i].appendChild(span);
-}
-
-// Click on a close button to hide the current list item
-let close = document.getElementsByClassName("close");
-for (let i = 0; i < close.length; i++) {
-    close[i].onclick = function() {
-        let div = this.parentElement;
-        div.style.display = "none";
-    }
-}
-
-// Add a "checked" symbol when clicking on a list item
-document.getElementById('dataList').addEventListener('click', function(ev) {
-    if (ev.target.tagName === 'LI') {
-        ev.target.classList.toggle('checked');
-    }
-}, false);
     
 // Create a new list item when clicking on the "Add" button
 function newDataElement(text) {
@@ -61,19 +35,6 @@ function newDataElement(text) {
     li.appendChild(t);
     
     document.getElementById('dataList').appendChild(li)
-
-    //let span = document.createElement("SPAN");
-    //let txt = document.createTextNode("\u00D7");
-    //span.className = "close";
-    //span.appendChild(txt);
-    //li.appendChild(span);
-//
-    //for (i = 0; i < close.length; i++) {
-        //close[i].onclick = function() {
-            //let div = this.parentElement;
-            //div.style.display = "none";
-        //}
-    //}
 }
 
 function refreshPorts() {

@@ -75,11 +75,13 @@ ipcRenderer.on('list-ports', (event, list) => {
 function addDataPoint(dataStr) {
     const fields = dataStr.split(',')
     console.log(fields)
-    const date = fields[0]
-    const time = ('00' + fields[1]).slice(-8)
-    const lat = fields[2]
-    const lng = fields[3]
-    if (fields.length == 5) {
+    const id = fields[0]
+    const date = fields[1]
+    const time = ('00' + fields[2]).slice(-8)
+    const lat = fields[3]
+    const lng = fields[4]
+    const hdop = fields[5]
+    if (fields.length == 6) {
         vectorSource.addFeature(new ol.Feature({
             geometry: new ol.geom.Point(ol.proj.transform([lng, lat], 'EPSG:4326', 'EPSG:3857')),
         }))

@@ -37,6 +37,10 @@ Menu.setApplicationMenu(menu)
 // be closed automatically when the JavaScript object is garbage collected.
 let win
 
+let serialPortMonitor = undefined
+    
+let serialport = undefined
+
 function createWindow () {
     // Create the browser window.
     win = new BrowserWindow({
@@ -60,37 +64,34 @@ function createWindow () {
         // when you should delete the corresponding element.
         win = null
     })
-    
-    let serialport = undefined
-    
-    ipcMain.on('list-ports', (event) => {
-        SerialPort.list().then(list => {
-            const ports = []
-            list.forEach(portInfo => {
-                ports.push(portInfo)
-            })
-            event.reply('list-ports', ports);
-        })
-    })
-    
-    ipcMain.on('port-selected', (ev, portInfo) => {
-        if (serialport !== undefined)
-            serialport.close()
-        serialport = new SerialPort(portInfo.path)
-        const parser = new Readline()
-        serialport.pipe(parser)
-        parser.on('data', line =>
-            win.webContents.send('new-data', line)
-        )
-        if (process.env.TRACKER_ENV === 'dev') //send fake location when serial port is checked in 'dev' environment
-            win.webContents.send('new-data', '20191219,080000000,42.650336,-83.167828,1.5')
-    })
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
+app.on('ready', () => {
+    if (serialPortMonitor === undefined) {
+        const serialPortListener = (portInfo) => {
+            if (serialport) { 
+                return 
+            }
+            console.log(`new serial port at ${portInfo.path}`)
+            serialport = new SerialPort(portInfo.path)
+            serialport.on('close', () => {
+                console.log(`serial port ${portInfo.path} closed`)
+                serialport = undefined
+            })
+            const parser = new Readline()
+            serialport.pipe(parser)
+            parser.on('data', line =>
+                win.webContents.send('new-data', line)
+            )
+        }
+        serialPortMonitor = new SerialPortMonitor(serialPortListener, '03EB', '2404')
+        serialPortMonitor.begin()
+    }
+    createWindow()
+})
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
@@ -112,3 +113,32 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+const delay = time => new Promise(res=>setTimeout(res,time));
+
+class SerialPortMonitor {
+    constructor(listener, vid, pid) {
+        this.listener = listener
+        this.vid = vid
+        this.pid = pid
+        this.active = false
+    }
+    setListener(listener) {
+        this.listener = listener
+    }
+    async begin() {
+        this.active = true;
+        while (this.active) {
+            await delay(1000)
+            const portInfoList = await SerialPort.list()
+            portInfoList.forEach((pi) => {
+                if (pi.vendorId === this.vid && pi.productId === this.pid && this.listener) {
+                    this.listener(pi)
+                }
+            })
+        }
+    }
+    end() {
+        this.active = false
+    }
+}

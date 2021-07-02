@@ -33,44 +33,8 @@ function newDataElement(text) {
     li.classList.add('trackerLI')
     let t = document.createTextNode(text);
     li.appendChild(t);
-    
     document.getElementById('dataList').appendChild(li)
 }
-
-function refreshPorts() {
-    ipcRenderer.send('list-ports')
-}
-
-function setChecked(li) {
-    const portsList = document.getElementById('portsList').children
-    for (let i = 0; i < portsList.length; ++i) {
-        portsList[i].classList.remove('checked')
-    }
-    li.classList.add('checked')
-}
-
-ipcRenderer.on('list-ports', (event, list) => {
-    const portsList = document.getElementById('portsList')
-    let checkedPort = undefined
-    while(portsList.firstChild){
-        if (portsList.firstChild.nodeName == "LI" && portsList.firstChild.classList.contains('checked'))
-            checkedPort = portsList.firstChild
-        portsList.removeChild(portsList.firstChild);
-    }
-    console.log('checked port ' + checkedPort)
-    list.forEach(port => {
-        var li = document.createElement("LI");
-        li.classList.add('trackerLI')
-        li.innerHTML = port.path;
-        if (checkedPort !== undefined && checkedPort.innerHTML == port.path)
-            li.classList.add('checked')
-        li.addEventListener('click', function() {
-            ipcRenderer.send('port-selected', port)
-            setChecked(li)
-        })
-        portsList.append(li)
-    })
-})
 
 function addDataPoint(dataStr) {
     const fields = dataStr.split(',')
